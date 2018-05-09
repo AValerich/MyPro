@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ru.sber.db.dao.ReportMapper">
+    <!--    result maps     -->
+    <resultMap id="carPlaceResult" type="ru.sber.model.CarPlace" >
+        <result column="PARK_ID" property="parkId" jdbcType="NUMERIC" javaType="java.lang.Integer"/>
+        <result column="CAR_PLACE_ID" property="carPlaceId" jdbcType="NUMERIC" javaType="java.lang.Long"/>
+        <result column="ON_PARKING" property="onParking" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="CARD_ID" property="carId" jdbcType="NUMERIC" javaType="java.lang.Long"/>
+        <result column="TIME_FROM" property="timeFrom" jdbcType="DATE" javaType="java.time.LocalDateTime"/>
+        <result column="TIME_TO" property="timeTo" jdbcType="DATE" javaType="java.time.LocalDateTime"/>
+    </resultMap>
+
+    <select id="getFreeCarPlaces" resultMap="carPlaceResult" statementType="CALLABLE">
+        {#{carPlaces, jdbcType=CURSOR, resultMap=carPlaceResult, javaType=java.sql.ResultSet, mode=OUT} = call test.PKG_Parking.get_free_car_places()};
+    </select>
+
+    <resultMap id="freeCarsResultMap" type="ru.sber.model.Car" >
+        <result column="CAR_ID" property="id" jdbcType="NUMERIC" javaType="java.lang.BigDecimal"/>
+        <result column="CAR_NUMBER" property="number" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="ON_PARKING" property="onParking" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="CAR_PLACE_ID" property="carPlaceId" jdbcType="NUMERIC" javaType="java.lang.BigDecimal"/>
+    </resultMap>
+
+    <select id="getCarsOnParkingAll" resultMap="onParkingAllMap" statementType="CALLABLE">
+        {#{car, jdbcType=CURSOR, resultMap=carPlaceResult, javaType=java.sql.ResultSet, mode=OUT} = call test.PKG_Parking.get_cars_on_parking_all()};
+    </select>
+
+    <resultMap id="freeCarsResultMap" type="ru.sber.model.Car" >
+        <result column="CAR_ID" property="id" jdbcType="NUMERIC" javaType="java.lang.BigDecimal"/>
+        <result column="CAR_NUMBER" property="number" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="ON_PARKING" property="onParking" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="CAR_PLACE_ID" property="carPlaceId" jdbcType="NUMERIC" javaType="java.lang.BigDecimal"/>
+    </resultMap>
+
+    <select id="getCarsOnParkingNow" resultMap="onParkingMap" statementType="CALLABLE">
+        {#{carPlaces, jdbcType=CURSOR, resultMap=carPlaceResult, javaType=java.sql.ResultSet, mode=OUT} = call test.PKG_Parking.get_cars_on_parking_now()};
+    </select>
+
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ru.sber.db.dao.ReportMapper">
+    <!--    result maps     -->
+
+    <select id="setNewToken" resultType="tokenId" statementType="CALLABLE">
+        {#{carPlaces, jdbcType=NUMBER, result=tokenId, javaType=java.lang.Long, mode=OUT} =
+        call test.PKG_Parking.get_new_token(#{carNumber, jdbcType=VARCHAR, javaType=java.lang.String,mode=IN});}
+    </select>
+
+    <resultMap id="getNewTokenParams" type="ru.sber.model.Token" >
+        <result column="TOKEN_ID" property="tokenId" jdbcType="NUMERIC" javaType="java.lang.Integer"/>
+        <result column="CAR_PLACE_ID" property="carPlaceId" jdbcType="NUMERIC" javaType="java.lang.Long"/>
+        <result column="PARKING_ID" property="parkingId" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="CARD_ID" property="carId" jdbcType="NUMERIC" javaType="java.lang.Long"/>
+        <result column="AMOUNT" property="amount" jdbcType="DATE" javaType="java.time.LocalDateTime"/>
+        <result column="TIME_TO" property="timeTo" jdbcType="DATE" javaType="java.time.LocalDateTime"/>
+    </resultMap>
+
+    <select id="getNewToken" resultMap="getNewTokenParams" statementType="CALLABLE">
+        {#{carPlaces, jdbcType=CURSOR, resultMap=carPlaceResult, javaType=java.sql.ResultSet, mode=OUT} =
+        call test.PKG_Parking.get_new_token(#{carNumber, jdbcType=VARCHAR, javaType=java.lang.String,mode=IN});}
+    </select>
+
+    <resultMap id="updateTokenMap" type="ru.sber.model.CarPlace" >
+        <result column="PARK_ID" property="parkId" jdbcType="NUMERIC" javaType="java.lang.Integer"/>
+        <result column="CAR_PLACE_ID" property="carPlaceId" jdbcType="NUMERIC" javaType="java.lang.Long"/>
+        <result column="ON_PARKING" property="onParking" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="CARD_ID" property="carId" jdbcType="NUMERIC" javaType="java.lang.Long"/>
+        <result column="TIME_FROM" property="timeFrom" jdbcType="DATE" javaType="java.time.LocalDateTime"/>
+        <result column="TIME_TO" property="timeTo" jdbcType="DATE" javaType="java.time.LocalDateTime"/>
+    </resultMap>
+
+    <select id="updateToken" resultMap="updateTokenMap" statementType="CALLABLE">
+        {#{carPlaces, jdbcType=CURSOR, resultMap=carPlaceResult, javaType=java.sql.ResultSet, mode=OUT} =
+        call test.PKG_Parking.update_token(
+          #{carNumber, jdbcType=VARCHAR, javaType=java.lang.String,mode=IN},
+          #{tokenId, jdbcType=NUMERIC, javaType=java.lang.Long, mode=IN}
+        );}
+    </select>
+
+
+</mapper>
